@@ -88,8 +88,8 @@ $to = "Ramona Recipient <arafet.benamor@aol.com>";
 $subject = "Hi!";
 $body = "Hi,\n\nHow are you?";
 $host = "smtp.mail.yahoo.com";
-$username = "ara_dawla@yahoo.fr";
-$password = "Eya2013@";
+$username = "";
+$password = "";
 $headers = array ('From' => $from,
   'To' => $to,
   'Subject' => $subject);
