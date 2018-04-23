@@ -1,113 +1,66 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Call for Help</title>
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-
-
-input[type=text], input[type=password] {
-    width: 30%;
-    padding: 15px 10px;
-    margin: 8px 0;
-    display: block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #4682B4 ;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 30%;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-   
-.container {
-    margin: auto;
-    width: 50%;
-    border: none;
-    padding: 10px;
-}
-
-span.psw {
-    float: right;
-    border-style: none;
-    padding-top: 10px;
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen {
-    span.psw {
-      display: block;
-      float: none;
-    }
-}
-h2.h2text{
-	text-align: center;
-}
-</style>
-</head>
-<body>
-<center><img width="200px" height="200px" style="margin-bottom: 20px" src="logo.png" /></center>
-<h2 class= "h2text"> Fehlermeldung </h2>
-
 <?php 
 session_start();
-if(isset($_REQUEST['attempt'])) {
-	
-	$db_host = 'localhost';
-	$db_name = 'test';
-	$db_user = 'root';
-	$db_password = '';
-	$pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_password);
-
-	
-	$email = $_POST['email'];
-	$password = $_POST['password'];
-	
-	$statement1 = $pdo->prepare("SELECT * FROM users WHERE email = :email");
-	$result1 = $statement1->execute(array('email' => $email));
-	$user = $statement1->fetch();
-	
-	//Überprüfung des Passworts
-	if ($user !== false && ($password == $user['passwort'])) {
-		$_SESSION['userid'] = $user['id'];
-		$_SESSION['anrede'] = $user['Anrede'];
-		$_SESSION['vorname'] = $user['vorname'];
-		$_SESSION['nachname'] = $user['nachname'];
-		$_SESSION['email'] = $user['email'];
-		header('LOCATION:action_page.php');
-		exit;
-	} 
-} 
-
+require_once("db.php");
+require_once("login.php");
 ?>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Call for Help</title>
+		<!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/bootstrap-theme.min.css"> 
+        <style>
+            .footer {
+               position: fixed;
+               left: 0;
+               bottom: 0;
+               width: 100%;
+               background-color: #f5f5f5;
+               color: black;
+               text-align: center;
+            }
+        </style>
+	</head>
+	<body>
+		<div class="container" style ="margin-top: 20px">
+			<div class="row justify-content-center">
+        		<div class="col-md-4  align ="center">
+        			<center><img width="200px" height="200px" src="images/logo.png"></center><br><br><br><br>
+        			
+        			<form method="post">
 
-<form method="post" action="index.php?attempt">
-	<div class="container">
-  
-    Herzlich Willkommen im Bereich Call for Help.</br>
-    Dieser Bereich ist passwortgeschuetzt. Bitte geben Sie Ihre Zugangsdaten ein.</br></br></br>
-    <label for="email"><b>E-Mail Adresse</b></label>
-    <input type="text" placeholder="Bitte geben Sie Ihre E-Mail Adresse ein." name="email" required>
-   
-    <label for="psw"><b>Passwort</b></label>
-    <input type="password" placeholder="Bitte geben Sie Ihren Passwort ein." name="password" required>
-    <button type="submit" href="index.php">Anmelden</button></br></br></br></br>    
-
-    
-    <b>Hinweis!</b> Sollten Sie noch nicht ueber ein Passwort verfuegen, dann setzen Sie sich doch einfach mit unserer <a href="www.3s-hamburg.de/kontakt/" target="_blank">Service Hotline</a> in Verbindung
-  </div>
-
-</form>
-
-</body>
+						<div class="form-group">
+							<label for="email"><b>E-Mail Adresse</b></label><br>
+							<input type="text" id="inputEmail" placeholder = "Bitte geben Sie Ihre E-Mail Adresse ein." name="email" class="form-control">
+						</div>
+						<div class="form-row">
+        				    <div class="col-md-8 mb-2">
+							<label for="ansprechpartner">Verbinden Sie sich gerade mit der eigene E-mail Adresse?</label><br>
+	                        </div>
+    					    <div class="col-md-4 mb-2">
+	                        	<select class="custom-select" name="ansprechpartner"  method="post" id="inputAP">
+    	                            <option value="ja">ja</option>
+    	                            <option value="nein">nein</option>
+                                </select></br>
+                            </div>
+					    </div>
+						<div class="form-group">
+							<label for="inputPassword"><b>Passwort</b></label><br>
+							<input type="password" id="inputPassword" name="password" placeholder = "Bitte geben Sie Ihren Passwort ein." class="form-control" ><br>
+						</div> 
+					
+						<div class="form-group">
+							<button type="submit" class="btn btn-secondary btn-block" class="form-control" >Anmelden</button>
+						</div> 
+					</form>
+          		</div>
+        	</div>
+    	</div>
+    	<div class="footer" align = "center">
+        	<p>Powered by</p>
+        	<a  href="http://www.3s-hamburg.de"><img src="images/3s_logo.png"  /></a>
+   		</div> 
+	</body>
 </html>

@@ -1,145 +1,84 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Call for Help</title>
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-
-
-input[type=text] {
-    width: 45%;
-    height: 30em;
-    padding: 15px 10px;
-    
-    margin: 8px 0;
-    display: block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button {
-    background-color: #4682B4 ;
-    color: white;
-    padding: 14px 20px;
-    margin: 8px 0;
-    border: none;
-    cursor: pointer;
-    width: 45%;
-}
-
-select {
-    width: 45%;
-    padding: 60px 40px;
-    margin: 0px 0;
-    display: block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-   
-.container {
-    margin: auto;
-    width: 50%;
-    border: none;
-    padding: 10px;
-}
-
-
-}
-
-/* Change styles for span and cancel button on extra small screens */
-@media screen {
-    span.psw {
-      display: block;
-      float: none;
-    }
-}
-h2.h2text{
-	text-align: center;
-}
-</style>
-</head>
-<body>
-<center><img width="200px" height="200px" style="margin-bottom: 20px" src="logo.png" /></center>
-<h2 class= "h2text"> Fehlermeldung </h2>
-
 <?php 
-
-require_once "./opt/lampp/lib/php/Mail.php";
-
 session_start();
-$db_host = 'localhost';
-$db_name = 'test';
-$db_user = 'root';
-$db_password = '';
-$pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_password);
-
+require_once("db.php");
+$_SESSION['email2'] = $_POST['email2'];
+$_SESSION['vorname2'] = $_POST['vorname2'];
+$_SESSION['nachname2'] = $_POST['nachname2'];
 $mail = $_SESSION['email'];
-$statement2 = $pdo->prepare("SELECT * FROM schools");
-$school = $statement2->execute();
+include ("header.php");
+?>
+<!DOCTYPE html>
 
+		<div class="container" style ="margin-top: 20px">
+			<div class="row justify-content-center">
+        		<div class="col-md-6  align ="center">
+        			
+        			<form method="post" action="upload.php" enctype="multipart/form-data">
+					    <div class="form-group">
+						
+						</div> 
+				        <div class="form-row">
+						    <div class="col-md-7 mb-3">
+						        <label for="fehler"><b>- Wählen Sie bitte eine Kategorie aus.</b></label>
+    						</div>
+						    <div class="col-md-5 mb-3">
+						        <select class="custom-select" name="fehler" method="post">
+						            <option value="leer"></option>
+    	                            <option value="Client">Software</option>
+    	                            <option value="Digitales Whiteboard">Präsentationssysteme</option>
+    	                            <option value="NAS">NAS</option>
+    	                            <option value="Peripherie">Peripherie</option>
+                                    <option value="Server">Server</option>
+                                    <option value="Sonstiges">Sonstiges</option>
+                                </select>
+    						</div>
+    					</div>
+				        <div class="form-row">
+						    <div class="col-md-9 mb-3">
+						        <label for="f_name"><b>- Name/Modell der betroffenen Hard-/Software</b></label>
+                                <textarea class="form-control" name="f_name"  cols="25" rows="1" maxlength="100" wrap="soft" method="post" placeholder = "Softwarename, Gerätemodell ...."></textarea>
+    						</div>						    
+						    <div class="col-md-3 mb-3">
+                                <label for="f_anzahl"><b>Anzahl</b></label>
+                                <input type="text" class="form-control" id="validationCustom03" name = "f_anzahl" placeholder="0" required>
+    						</div>
 
-$from = "taraji <ara_dawla@yahoo.fr>";
-$to = "Ramona Recipient <arafet.benamor@aol.com>";
-$subject = "Hi!";
-$body = "Hi,\n\nHow are you?";
-$host = "smtp.mail.yahoo.com";
-$username = "";
-$password = "";
-$headers = array ('From' => $from,
-  'To' => $to,
-  'Subject' => $subject);
-$smtp = Mail::factory('smtp',
-  array ('host' => $host,
-    'auth' => true,
-    'username' => $username,
-    'password' => $password));
-$mail = $smtp->send($to, $headers, $body);
-echo 'Mail send';
-if (PEAR::isError($mail)) {
-  echo("<p>" . $mail->getMessage() . "</p>");
- } else {
-  echo("<p>Message successfully sent!</p>");
- }
-?> 
-	
-<form method="post" action="action_page.php?attempt">
-	<div class="container">
-	
-	<?php 
-	echo 'Herzlich Willkommen ' . $_SESSION['anrede'] . ' ' . $_SESSION['vorname'] . ' ' . $_SESSION['nachname'] . " im Bereich Call for Help.</br>
-    Sie betreuen folgende Schulen. Wählen Sie bitte den Standort aus: ";
-	echo '<select name="schule">';
-	while($school = $statement2->fetch()) {
-		if($school['email'] == $mail) {
-			echo '<option value="'.$school['school_name'].'">'.$school['school_name'].'</option>';
-		} 
-	}
-	echo '</select></br></br>';
-	
-	echo "Hier können Sie die Fehlermeldung beschreiben.</br></br></br>";
-	?> 
-	
-    <label for="fehler"><b>Fehler Kategorie</b></label></br>
-    <select name="fehler">
-    	<option value="Client">Client</option>
-    	<option value="Digitales Whiteboard">Digitales Whiteboard</option>
-    	<option value="NAS">NAS</option>
-    	<option value="Peripherie">Peripherie</option>
-    	<option value="Server">Server</option>
-    </select></br>
-    <label for="beschreibung"><b>Beschreibung</b></label></br>
-    <textarea name="html_elemente"  cols="50" rows="15" maxlength="10000" wrap="soft"></textarea></br>
-    <button type="submit" href="action_page.php">Senden</button></br></br></br></br>    
-
-  	</div>
-
-</form>
-
-</body>
+    					</div>						
+    					<div class="form-group">
+							<label for="f_wann"><b>- Wann tritt die Störung ein?</b></label>
+							<textarea class="form-control" name="f_wann"  cols="25" rows="1" maxlength="100" wrap="soft" method="post" placeholder = "Dauerhaft?"></textarea>
+						</div>
+    					<div class="form-group">
+							<label for="f_wie"><b>- Wie macht sich die Störung bemerkbar?</b></label>
+							<textarea class="form-control" name="f_wie"  cols="25" rows="1" maxlength="100" wrap="soft" method="post" placeholder = "Wenn mehrere benutzer sich anmelden...."></textarea>
+						</div>
+						<div class="form-group">
+							<label for="f_quellen"><b>- Wurden Fehlerquellen ausgeschlossen?</b></label>
+							<textarea class="form-control" name="f_quellen"  cols="25" rows="1" maxlength="100" wrap="soft" method="post" placeholder = "Neustart, Überprüfung der Anschlüsse ...."></textarea>
+						</div> 
+						<div class="form-group">
+							<label for="beschreibung"><b>- Beschreibung</b></label></br>
+							<textarea class="form-control" name="beschreibung"  cols="25" rows="3" maxlength="10000" wrap="soft" method="post"></textarea>
+						</div> 
+                        <div class="form-group">
+                            <label for="datei"><b>- Hier können Sie eine Datei (Screenshot..) hochladen.</b></label>
+                            <input type="file" name="datei">
+                        </div>
+					
+						<div class="form-group">
+							<button type="submit" class="btn btn-secondary btn-block" class="form-control" name="senden">Senden</button>
+						</div> 
+					</form>
+          		</div>
+        	</div>
+    	</div>
+    	<div class="footer" align = "center">
+        	<p>Powered by</p>
+        	<a  href="http://www.3s-hamburg.de"><img src="images/3s_logo.png"  /></a>
+   		</div>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/popper.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+    </body>
 </html>
 
